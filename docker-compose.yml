@@ -1,0 +1,35 @@
+version: '3'
+services:
+  nats_a:
+    hostname: nats_a
+    image: nats:latest
+    build: ./conf/nats/a
+    working_dir: '/go/src/app'
+    command: sh ./start_cmd.sh
+    volumes:
+      - ./conf/nats/a:/tmp/
+    ports:
+      - 7244:7244
+    tty: true
+  nats_b:
+    hostname: nats_b
+    image: nats:latest
+    volumes:
+      - ./conf/nats/b:/tmp/
+    ports:
+      - 7246:7246
+    tty: true
+    links:
+      - nats_a
+  nats_c:
+    hostname: nats_c
+    image: nats:latest
+    volumes:
+      - ./conf/nats/c:/tmp/
+    ports:
+      - 7248:7248
+    tty: true
+    links:
+      - nats_a
+      - nats_b
+
